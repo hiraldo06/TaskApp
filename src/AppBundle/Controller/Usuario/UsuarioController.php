@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UsuarioController extends Controller
 {
     /**
-     * @Route("/usuario", name="vista_usuario")
+     * @Route("/usuario", name="users")
      */
     public function indexUsuario(){
 
@@ -39,8 +39,7 @@ class UsuarioController extends Controller
         return $this->render('@App/Usuario/lista.html.twig', [
             'usuarios' => $usuarios
         ]);
-        //dump($usuarios);
-        //die;
+
 
     }
 
