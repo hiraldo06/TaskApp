@@ -11,7 +11,6 @@ namespace AppBundle\Controller\Usuario;
 
 use AppBundle\Entity\Usuario;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,10 +72,9 @@ class UsuarioController extends Controller
     /**
      * @Route("rest/usuario/{id}", name="buscar_usuario")
      * @Method("GET")
-     * @ParamConverter("usuario", class="AppBundle:Usuario")
      * @param Usuario $usuario
      */
-    public function buscarUsuario($usuario)
+    public function buscarUsuario(Usuario $usuario)
     {
         $helpers=$this->get("app.helpers");
         return new JsonResponse($helpers->json($usuario));
@@ -105,17 +103,23 @@ class UsuarioController extends Controller
     /**
      * @Route("/rest/usuario/{id}", name="actualizar_usuario")
      * @Method("PUT")
-     * @ParamConverter("usuario", class="AppBundle:Usuario")
      * @param Request $request
      * @param Usuario $usuario
      * @return JsonResponse
      */
-    public function actualizarUsuario(Request $request,$usuario){
+    public function actualizarUsuario(Request $request,Usuario $usuario){
         $data=$request->getContent();
         $data=(json_decode($data,true));
+        $usuario->setNombre($data["nombre"]);
+        $usuario->setUsername($data["username"]);
+
         $em=$this->getDoctrine()->getManager();
         $em->flush();
+        $helpers =$this->get("app.helpers");
+        //mismo metodo que el anterior pero usando el servicios de simfony
+        //$jsonContent=$this->get('serializer')->serializer($usuario,'json');
 
-        return new JsonResponse($data);
+        //$jsonContent=json_decode($jsonContent,true);
+        return new JsonResponse($helpers->json($usuario));
     }
 }
