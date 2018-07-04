@@ -10,11 +10,13 @@ namespace AppBundle\Controller\Usuario;
 
 
 use AppBundle\Entity\Usuario;
+use AppBundle\Form\UsuarioType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class UsuarioController extends Controller
@@ -47,30 +49,47 @@ class UsuarioController extends Controller
     }
 
 
+
+
+
+
+    //editar usuario
+
     /**
-     * @Route("/usuario/{idUsuario}", name="informacion_usuario")
+     * @Route("/usuario/{id}", options={"expose"=true}, name="edit_usuario")
+     * @Method("GET")
+     * @param Usuario $usuario
+     * @return Response
      */
-    public function indexUsuarioInfo($idUsuario){
-        /*dump( "aqui estamos con el id del usario : ".$idUsuario);
-        die;*/
-        return $this->render('@App/Usuario/index.html.twig', [
-            'idUsuario' => $idUsuario
+    public function indexEditUsuario(Usuario $usuario){
+
+        return $this->render('@App/Usuario/editar_usuario.html.twig', [
+            'usuario' => $usuario
         ]);
     }
+
+
+
 
 
     //API Rest
 
     /**
-     * @Route("/rest/usuario", name="buscar_usuarios")
+     * @Route("rest/usuario", options={"expose"=true}, name="listar_usuarios")
      * @Method("GET")
+     * @return JsonResponse
      */
-    public function buscarUsuarios(Request $request){
-        return null;
+    public function listarUsuarios(){
+
+        $usuarios=$this->getDoctrine()->
+        getRepository(Usuario::class)
+            ->findAll();
+        $helpers=$this->get("app.helpers");
+        return new JsonResponse($helpers->json($usuarios));
     }
 
     /**
-     * @Route("rest/usuario/{id}", name="buscar_usuario")
+     * @Route("rest/usuario/{id}", options={"expose"=true}, name="buscar_usuario")
      * @Method("GET")
      * @param Usuario $usuario
      */
@@ -81,7 +100,7 @@ class UsuarioController extends Controller
     }
 
     /**
-     * @Route("/rest/usuario", name="guardar_usuario")
+     * @Route("/rest/usuario", options={"expose"=true}, name="guardar_usuario")
      * @Method("POST")
      */
     public function guardarUsuario(Request $request)
@@ -90,18 +109,24 @@ class UsuarioController extends Controller
 
         $data=(json_decode($data,true));
         $usuario=new Usuario();
-        $usuario->setNombre($data["nombre"]);
-        $usuario->setUsername($data["username"]);
+        $form=$this->createForm(UsuarioType::class,$usuario);
+        $form->submit($data);
+      //  $usuario->setNombre($data["nombre"]);
+       // $usuario->setUsername($data["username"]);
 
-        $em=$this->getDoctrine()->getManager();
-        $em->persist($usuario);
-        $em->flush();
-        $helpers =$this->get("app.helpers");
-        return new JsonResponse($helpers->json($usuario));
+        if($form->isValid()){
+            $em=$this->getDoctrine()->getManager();
+            $em->persist($usuario);
+            $em->flush();
+            $helpers =$this->get("app.helpers");
+            return new JsonResponse($helpers->json($usuario));
+        }
+       // $form->getErrors();
+        return new JsonResponse(null,400);
     }
 
     /**
-     * @Route("/rest/usuario/{id}", name="actualizar_usuario")
+     * @Route("/rest/usuario/{id}", options={"expose"=true},name="actualizar_usuario")
      * @Method("PUT")
      * @param Request $request
      * @param Usuario $usuario
@@ -110,16 +135,35 @@ class UsuarioController extends Controller
     public function actualizarUsuario(Request $request,Usuario $usuario){
         $data=$request->getContent();
         $data=(json_decode($data,true));
-        $usuario->setNombre($data["nombre"]);
-        $usuario->setUsername($data["username"]);
+        $form=$this->createForm(UsuarioType::class,$usuario);
+        $form->submit($data);
+        //$usuario->setNombre($data["nombre"]);
+       // $usuario->setUsername($data["username"]);
+        if($form->isValid()){
+            $em=$this->getDoctrine()->getManager();
+            $em->flush();
+            $helpers =$this->get("app.helpers");
+            //mismo metodo que el anterior pero usando el servicios de simfony
+            //$jsonContent=$this->get('serializer')->serializer($usuario,'json');
 
-        $em=$this->getDoctrine()->getManager();
+            //$jsonContent=json_decode($jsonContent,true);
+            return new JsonResponse($helpers->json($usuario));
+        }
+        //$form->getErrors();
+        return new JsonResponse(null,400);
+    }
+
+    //eliminar usuario
+    /**
+     * @Route("/rest/usuario/{id}", options={"expose"=true}, name="eliminar_usuario")
+     * @Method("DELETE")
+     * @param Usuario $usuario
+     * @return Response
+     */
+    public function indexEliminarUsuario(Usuario $usuario){
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($usuario);
         $em->flush();
-        $helpers =$this->get("app.helpers");
-        //mismo metodo que el anterior pero usando el servicios de simfony
-        //$jsonContent=$this->get('serializer')->serializer($usuario,'json');
-
-        //$jsonContent=json_decode($jsonContent,true);
-        return new JsonResponse($helpers->json($usuario));
+        return $this->redirectToRoute('users');
     }
 }

@@ -35,6 +35,12 @@ class Usuario
      */
     private $username;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
+     */
+    private $email;
 
     /**
      * Get id
@@ -93,5 +99,22 @@ class Usuario
     {
         return $this->username;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
 }
 

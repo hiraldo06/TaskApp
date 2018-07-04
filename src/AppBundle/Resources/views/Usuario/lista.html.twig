@@ -3,13 +3,13 @@
 {% block nav_users %}class="active"{% endblock %}
 {% block nav_home %} {% endblock %}
 {% block body %}
-    <h1> Lista de Usuarios</h1>
+    <h1 > Lista de Usuarios</h1>
     <div class="pull-right ">
         <a class="btn btn-default" href="#"> <span class="glyphicon glyphicon-plus"></span> Crear uno nuevo</a>
     </div>
     <div class="container-fluid"></div>
     <hr>
-    <table class="table table-striped table-hover table-responsive table-condensed">
+    <table id="table" class="table table-striped table-hover table-responsive table-condensed">
         <thead>
             <tr>
                 <th>ID</th>
@@ -25,13 +25,47 @@
                 <td>{{ usuario.nombre }}</td>
                 <td>{{ usuario.username }}</td>
                 <td class="text-center">
-                    <button class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-edit"></span>Editar</button>
-                    <button class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>Eliminar</button>
+                    <a href="{{ path('edit_usuario', { 'id':usuario.id}) }}" class="btn btn-primary btn-sm"> <span class="glyphicon glyphicon-edit"></span>Editar</a>
+                    <a id="deleteUsers"  class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span>Eliminar</a>
                 </td>
+                <td hidden id="idUsuario">{{ usuario.id }}</td>
             </tr>
 
         {% endfor %}
         </tbody>
     </table>
 
+    {% block javascript %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click','#deleteUsers',function (e) {
+                var r=$(e.target).closest('tr');
+                var id=r.find('#idUsuario').text();
+                $.ajax({
+                    url: Routing.generate('eliminar_usuario', {id : id}),
+                    type: 'DELETE',
+                    success:function (response) {
+                      //  location.reload();
+
+
+                        console.log('delete');
+                    },
+                    error:function (err) {
+
+                        console.log(err);
+                    }
+                });
+                r.remove();
+            });
+        });
+
+
+
+
+
+
+    </script>
+    {% endblock %}
 {% endblock %}

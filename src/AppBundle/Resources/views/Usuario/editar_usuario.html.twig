@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Users/{{ usuario.nombre }}{% endblock %}
+
+{% block body %}
+    <h1>Editando Usuario</h1>
+    <div class="container-fluid"></div>
+    <hr>
+    <div class="col-md-6">
+        <form >
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input  class="form-control" type="text" id="nombre" value="{{ usuario.nombre }}">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" type="text" id="username" value="{{ usuario.username }}">
+            </div>
+            <input hidden id="id" value="{{ usuario.id }}">
+            <button type="button"  onclick="guardar()" class="btn btn-primary"> Guardar</button>
+        </form>
+    </div>
+
+
+    <script>
+
+        function guardar() {
+            var id =$('#id').val();
+            var nombre =$('#nombre').val();
+            var username=$('#username').val();
+
+            var data ={
+                id:id,
+                nombre : nombre,
+                username : username
+            };
+            $.ajax({
+                url:Routing.generate('actualizar_usuario', {id : id}),
+                type: 'PUT',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log(response);
+                }  ,
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            console.log("Hola: ",nombre,username);
+        }
+    </script>
+{% endblock %}
