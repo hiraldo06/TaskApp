@@ -4,8 +4,10 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UsuarioType extends AbstractType
@@ -16,8 +18,16 @@ class UsuarioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('nombre', TextType::class)
-            ->add('username', TextType::class)
-            ->add('email', EmailType::class);
+            ->add('username', EmailType::class)
+            ->add('tipo_usuario',ChoiceType::class, array(
+                'choices' => array(
+                    "NORMAL" => 'ROLE_NORMAL',
+                    "TECNICO"=> 'ROLE_TECNICO',
+                ),
+                'expanded' => true,
+            )
+            )
+            ->add("contrasena",PasswordType::class);
     }/**
      * {@inheritdoc}
      */

@@ -1,0 +1,60 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Nota
+ *
+ * @ORM\Table(name="nota", indexes={@ORM\Index(name="fk_nota_ticket", columns={"ticket_id"}), @ORM\Index(name="fk_nota_usuario", columns={"usuario_id"})})
+ * @ORM\Entity
+ */
+class Nota
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=false)
+     */
+    private $fecha;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comentario", type="string", length=255, nullable=false)
+     */
+    private $comentario;
+
+    /**
+     * @var \Ticket
+     *
+     * @ORM\ManyToOne(targetEntity="Ticket")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ticket_id", referencedColumnName="id")
+     * })
+     */
+    private $ticket;
+
+    /**
+     * @var \Usuario
+     *
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     * })
+     */
+    private $usuario;
+
+
+}
+

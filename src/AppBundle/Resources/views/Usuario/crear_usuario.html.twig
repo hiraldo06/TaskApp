@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
-{% block title %}Users/{{ usuario.nombre }}{% endblock %}
+{% block title %}Users-ADD{% endblock %}
 {% block nav_users %}class="active"{% endblock %}
 {% block nav_home %} {% endblock %}
 {% block body %}
-    <h1>Editando Usuario: <span>{{ usuario.id }} {{ usuario.nombre }}</span></h1>
+
+
+    <h1>Crear Usuario</h1>
     <div class="container-fluid"></div>
     <hr>
     <div class="col-md-6">
@@ -18,6 +20,7 @@
                 {{ form_widget(form.username) }}
                 {{ form_errors(form.username) }}
             </div>
+
             <div class="form-group">
                 <label for="tipo_usuario">Tipo de Usuario</label>
                 {{ form_widget(form.tipo_usuario) }}
@@ -28,7 +31,6 @@
                 {{ form_widget(form.contrasena) }}
                 {{ form_errors(form.contrasena) }}
             </div>
-            <input hidden id="id" value="{{ usuario.id }}">
             <button type="button"  onclick="guardar()" class="btn btn-primary"> Guardar</button>
         </form>
     </div>
@@ -37,22 +39,23 @@
     <script>
 
         function guardar() {
-            var id =$('#id').val();
+
+
             var nombre =$('#appbundle_usuario_nombre').val();
             var username=$('#appbundle_usuario_username').val();
+
             var tipo_usuario=$('input[name="appbundle_usuario[tipo_usuario]"]:checked').val();
             var contrasena=$('#appbundle_usuario_contrasena').val();
 
             var data ={
-                id:id,
                 nombre : nombre,
                 username : username,
-                tipo_usuario :tipo_usuario,
+                tipo_usuario: tipo_usuario,
                 contrasena : contrasena
             };
             $.ajax({
-                url:Routing.generate('actualizar_usuario', {id : id}),
-                type: 'PUT',
+                url:Routing.generate('guardar_usuario'),
+                type: 'POST',
                 data: JSON.stringify(data),
                 success: function (response) {
                     console.log(response);
@@ -62,7 +65,7 @@
                 }
             });
 
-            console.log(data);
+
         }
     </script>
 {% endblock %}

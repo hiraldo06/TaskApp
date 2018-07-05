@@ -1,0 +1,28 @@
+{% extends '@App/layout.html.twig' %}
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<div class="container">
+    {{ dump(error) }}
+    <form class="form-signin" action="{{ path("login_check") }}" method="post">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="_username" class="sr-only">Email</label>
+        <input type="email" placeholder="Email" id="username" name="_username" value="{{ last_username }}" class="form-control">
+        <label for="_password" class="sr-only">Password</label>
+        <input type="password" placeholder="Contraseña" id="password" name="_password"  class="form-control">
+
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{{ path("registro") }}">Registrarse</a>
+            </div>
+            <div class="col-md-6 text-right">
+                <input type="submit" value="Enviar" class="btn btn-success">
+            </div>
+        </div>
+
+        <input type="hidden" name="_target_path" value="/">
+    </form>
+
+</div> <!-- /container -->
+{% endblock %}
+

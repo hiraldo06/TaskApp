@@ -1,0 +1,75 @@
+
+{% extends '@App/layout.html.twig' %}
+{% block title %}Registro{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="col-md-4 col-md-offset-4">
+        <h1>Crear Usuario</h1>
+        <div class="container-fluid"></div>
+        <hr>
+        <form>
+            <div class="form-group">
+                <label for="username">Nombre</label>
+                {{ form_widget(form.nombre) }}
+                {{ form_errors(form.nombre) }}
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                {{ form_widget(form.username) }}
+                {{ form_errors(form.username) }}
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_usuario">Tipo de Usuario</label>
+                {{ form_widget(form.tipo_usuario) }}
+                {{ form_errors(form.tipo_usuario) }}
+            </div>
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                {{ form_widget(form.contrasena) }}
+                {{ form_errors(form.contrasena) }}
+            </div>
+            <button type="button"  onclick="guardar()" class="btn btn-primary"> Guardar</button>
+        </form>
+    </div>
+
+
+<script>
+
+    function guardar() {
+
+
+        var nombre =$('#appbundle_usuario_nombre').val();
+        var username=$('#appbundle_usuario_username').val();
+
+        var tipo_usuario=$('input[name="appbundle_usuario[tipo_usuario]"]:checked').val();
+        var contrasena=$('#appbundle_usuario_contrasena').val();
+        var redirect_url='/app_dev.php/login';
+        var data ={
+            nombre : nombre,
+            username : username,
+            tipo_usuario: tipo_usuario,
+            contrasena : contrasena
+        };
+        $.ajax({
+            url:Routing.generate('guardar_usuario'),
+            type: 'POST',
+            data: JSON.stringify(data),
+            success: function (response) {
+
+                window.location.href = redirect_url;
+                console.log(redirect_url);
+                console.log(response);
+            }  ,
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+
+    }
+</script>
+</div> <!-- /container -->
+{% endblock %}

@@ -1,0 +1,74 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Ticket
+ *
+ * @ORM\Table(name="ticket", indexes={@ORM\Index(name="fk_ticket_usuario", columns={"usuario_id"}), @ORM\Index(name="fk_ticket_usuario_asignado", columns={"usuario_asignado_id"})})
+ * @ORM\Entity
+ */
+class Ticket
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_creado", type="datetime", nullable=true)
+     */
+    private $fechaCreado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="string", length=45, nullable=true)
+     */
+    private $estado;
+
+    /**
+     * @var \Usuario
+     *
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
+     * })
+     */
+    private $usuario;
+
+    /**
+     * @var \Usuario
+     *
+     * @ORM\ManyToOne(targetEntity="Usuario")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="usuario_asignado_id", referencedColumnName="id")
+     * })
+     */
+    private $usuarioAsignado;
+
+
+}
+

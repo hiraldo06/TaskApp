@@ -2,17 +2,53 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Usuario;
+use AppBundle\Form\UsuarioType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
+
+
+    /**
+     * @Route("/login", name="login")
+     */
+    public function loginAction(Request $request)
+    {       //llamamos el servicios
+        $authenticationUtils=$this->get("security.authentication_utils");
+        $error=$authenticationUtils->getLastAuthenticationError();
+        $lastUsername=$authenticationUtils->getLastUserName();
+
+        // replace this example code with whatever you need
+        return $this->render('@App/Login/index.html.twig', [
+            "error"=>$error,
+            "last_username"=>$lastUsername
+        ]);
+    }
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logoutAction(Request $request)
+    {
+       // return $this->redirectToRoute('login');
+    }
+
+    /**
+     * @Route("/login_check", name="login_check")
+     */
+    public function checkAction(Request $request)
+    {
+    }
+
     /**
      * @Route("/", name="home")
      */
     public function indexAction(Request $request)
     {
+
+
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'homepage' => "Home TaskApp",
@@ -20,13 +56,15 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/hola", name="homepage_1")
+     * @Route("/registro", name="registro")
      */
-    public function index1Action(Request $request)
-    {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => "Hola Jose Hiraldo",
+    public function crearUsuario(){
+        $usuario=new Usuario();
+        $form = $this->createForm(UsuarioType::class, $usuario);
+
+        return $this->render('@App/Login/registro_usuario.html.twig', [
+            'form' => $form->createView()
+
         ]);
     }
 }

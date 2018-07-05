@@ -57,10 +57,27 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li {% block nav_home %}class="active" {% endblock %}><a href="{{ path('home') }}">Home</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
                 <li {% block nav_users %} {% endblock %} ><a href="{{ path('users') }}">Users</a></li>
+                {% endif %}
                 <li {% block nav_tasks %} {% endblock %}><a href="{{ path('tasks') }}">Tasks</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="active">Usuario : {{ app.user.nombre }}</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if app.user != null%}
+                            <li><a href="{{path("logout")}}">Salir</a></li>
+                        {% endif%}
+                    </ul>
+                </li>
             </ul>
         </div><!--/.nav-collapse -->
+
     </div>
 </nav>
 
