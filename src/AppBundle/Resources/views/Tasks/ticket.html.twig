@@ -40,47 +40,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-md-offset-2">
+        <div  class="col-md-4 col-md-offset-2">
+            <div class="nota"></div>
 
-            <label>Notas     <a href="" class="btn btn-success btn-sm">Agregar Nota</a></label>
-            <table id="table" class="table table-striped table-hover table-responsive table-condensed">
-                <thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Nota</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Juan P</td>
-                        <td>11/07/2018</td>
-                        <td>Porque no termina</td>
-                    </tr>
-                    <tr>
-                        <td>Juan P</td>
-                        <td>11/07/2018</td>
-                        <td>Porque no termina</td>
-                    </tr>
-                    <tr>
-                        <td>Juan P</td>
-                        <td>11/07/2018</td>
-                        <td>Porque no termina</td>
-                    </tr>
-                    <tr>
-                        <td>Juan P</td>
-                        <td>11/07/2018</td>
-                        <td>Porque no termina</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
     <input type="hidden" class="hidden" value="{{ id }}" id="ticket">
     {% block js %}
 
         <script>
-                function getTableTask(){
+                function getDataTask(){
                     var id=$('#ticket').val();
                     $.ajax({
                         url: Routing.generate('rest_ver_task', {id : id}),
@@ -93,7 +62,6 @@
                             $("#asignacion").html(response.id);
                             $("#asignado_por").html(response.usuario.nombre);
 
-                            console.log(response.estado);
                             if (response.estado=="EN_PROCESO") {
                                 $("#estado").html(response.estado);
                                 $("#bestado").removeClass("btn-primary").addClass(" btn-warning");
@@ -109,7 +77,7 @@
                         }
 
                     });
-
+                    getTable(id);
                 }
 
                 function cambiarEstado(){
@@ -124,15 +92,88 @@
                         type: 'PUT',
                         data: JSON.stringify(data),
                         success: function (response) {
-                            console.log(response);
+
                         }  ,
                         error: function (err) {
                             console.log(err);
                         }
                     });
-                    getTableTask();
+                    getDataTask();
                 }
-                getTableTask();
+                getDataTask();
+                function getTable(id) {
+
+                    $.ajax({
+                        url: Routing.generate('rest_notas', {id : id}),
+                        type: 'GET',
+                        success:function (response) {
+                            $(".nota").html("<label>Notas     <button onclick='getAddNotas()' class='btn btn-success btn-sm'>Agregar Nota</button></label>" +
+                                "            <table id='table' class='table table-striped table-hover table-responsive table-condensed'>" +
+                                "                <thead>" +
+                                "                <tr>" +
+                                "                    <th>Usuario</th>" +
+                                "                    <th>Fecha</th>" +
+                                "                    <th>Nota</th>" +
+                                "                </tr>" +
+                                "                </thead>" +
+                                "                <tbody>" +
+                                "                </tbody>" +
+                                "            </table>");
+
+                            $.each(response,function(i,index) {
+                                if(index.id){
+
+                                    $("#table").append("<tr>" +
+                                        "                       <td>"+index.usuario.nombre+"</td>" +
+                                        "                       <td>"+new Date(index.fecha.timestamp*1000)+"</td>" +
+                                        "                       <td>"+index.comentario+"</td>" +
+                                        "                   </tr>");
+
+                                }
+
+                            });
+                            console.log(response);
+                        }
+
+                    });
+                }
+
+                function getAddNotas(){
+                    var ticket=$("#asignacion").text();
+                    $(".nota").html("" +
+                            "<label> Agragar Comentario</label>"+
+                        "<textarea class='form-control' id='comentario'  rows='5' ></textarea><br>"+
+                    "<button onclick='guardar()' class='btn btn-primary'>Guardar</button> "+
+                        "<button onclick='getTable("+ticket+")' class='btn btn-danger'>Cancelar</button> ");
+
+
+
+                }
+
+                function guardar() {
+                    var ticket=$("#asignacion").text();
+                    var usuario={{ app.user.id }};
+                    var comentario=$("#comentario").val();
+                    if(comentario.length>5) {
+                        console.log("que paso que no hiciste nada");
+                        var data = {
+                            comentario: comentario,
+                            usuario: usuario,
+                            ticket: ticket
+                        };
+                        $.ajax({
+                            url: Routing.generate('rest_add_nota'),
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                getTable(ticket);
+                            },
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+                }
 
         </script>
     {% endblock %}
