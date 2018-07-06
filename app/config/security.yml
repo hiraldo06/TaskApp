@@ -24,10 +24,11 @@ security:
             provider: db_provider
             form_login:
               login_path: /login
-              check_path: /login_check
+              check_path: /login
             logout:
               path: /logout
               target: /login
+            access_denied_handler: AppBundle\Security\AccessDeniedHandler
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
@@ -36,11 +37,18 @@ security:
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
 
+
     access_control:
             - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+            - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY}
             - { path: ^/registro, roles: IS_AUTHENTICATED_ANONYMOUSLY}
-            - { path: ^/rest/, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+            - { path: ^/rest/nota, roles: [ROLE_TECNICO,ROLE_NORMAL]}
+            - { path: ^/task/crear, roles: ROLE_NORMAL}
             - { path: ^/task, roles: [ROLE_TECNICO,ROLE_NORMAL]}
+            - { path: ^/pendiente, roles: ROLE_NORMAL}
+            - { path: ^/proceso, roles: ROLE_NORMAL}
+            - { path: ^/rest/task/, roles: [ROLE_TECNICO,ROLE_NORMAL]}
             - { path: ^/usuario, roles: ROLE_ADMIN}
+            - { path: ^/rest/usuario/, roles: [ROLE_TECNICO,ROLE_NORMAL]}
             - { path: ^/, roles: [ROLE_TECNICO,ROLE_NORMAL]}
 

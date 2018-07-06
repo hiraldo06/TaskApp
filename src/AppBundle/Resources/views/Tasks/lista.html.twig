@@ -66,7 +66,7 @@
                     url: Routing.generate('task_list', {id : {{ app.user.id}}}),
                     type: 'GET',
                     success:function (response) {
-                        console.log(response);
+                        
                         var data=response;
                         $.each(data,function(i,index) {
                             {% if is_granted("ROLE_NORMAL") %}
@@ -77,9 +77,10 @@
                             {% endif %}
                           if(index.id){
                               var url ='{{ path("ver_task",{ 'id':'id_r' } ) }}';
+                              var fecha=new Date(index.fechaCreado.timestamp*1000);
                               url=url.replace("id_r",index.id);
                               $(".table").append("<tr><td>"+index.id+"</td>" +
-                                                      "<td>"+new Date(index.fechaCreado.timestamp*1000)+"</td>" +
+                                                      "<td>"+fecha.toLocaleDateString("es-DO")+"</td>" +
                                                       "<td>"+usuario+"</td>" +
                                                       "<td>"+index.estado+"</td>" +
                                                       "<td class='text-left'><a href='"+url+"' class='btn btn-success btn-sm '>Ver</a>" +

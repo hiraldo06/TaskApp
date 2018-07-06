@@ -16,7 +16,7 @@
         </div>
         {% endif %}
     </div>
-    <a href="" class="btn btn-primary btn-sm">PENDIENTE</a>
+    <label id="lestado" class="label ">P</label>
     <div class="row">
         <div class="col-md-6">
             <div class="row">
@@ -55,22 +55,28 @@
                         url: Routing.generate('rest_ver_task', {id : id}),
                         type: 'GET',
                         success:function (response) {
-
+                            var fecha=new Date(response.fechaCreado.timestamp*1000);
                             $("#asignado_a").html(response.usuarioAsignado.nombre);
                             $("#descripcion").html(response.descripcion);
-                            $("#fecha").html(new Date(response.fechaCreado.timestamp*1000));
+                            $("#fecha").html(fecha.toLocaleDateString("es-DO"));
                             $("#asignacion").html(response.id);
                             $("#asignado_por").html(response.usuario.nombre);
 
                             if (response.estado=="EN_PROCESO") {
                                 $("#estado").html(response.estado);
+                                $("#lestado").html("EN PROCESO");
                                 $("#bestado").removeClass("btn-primary").addClass(" btn-warning");
+                                $("#lestado").removeClass("label-primary").addClass(" label-warning");
                             }else if(response.estado=="LISTO") {
                                 $("#estado").html(response.estado);
                                 $("#bestado").removeClass("btn-warning").addClass("disabled");
+                                $("#lestado").html("LISTO");
+                                $("#lestado").removeClass("btn-warning").addClass("label-default");
                             }else{
                                 $("#estado").html(response.estado);
                                 $("#bestado").addClass(" btn-primary");
+                                $("#lestado").html("PEDIENTE");
+                                $("#lestado").addClass("label-primary");
 
                             }
 
@@ -122,10 +128,10 @@
 
                             $.each(response,function(i,index) {
                                 if(index.id){
-
+                                    var fecha=new Date(index.fecha.timestamp*1000);
                                     $("#table").append("<tr>" +
                                         "                       <td>"+index.usuario.nombre+"</td>" +
-                                        "                       <td>"+new Date(index.fecha.timestamp*1000)+"</td>" +
+                                        "                       <td>"+fecha.toLocaleDateString("es-Do")+"</td>" +
                                         "                       <td>"+index.comentario+"</td>" +
                                         "                   </tr>");
 

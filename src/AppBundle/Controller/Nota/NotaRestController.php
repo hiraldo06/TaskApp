@@ -12,6 +12,7 @@ namespace AppBundle\Controller\Nota;
 use AppBundle\Entity\Nota;
 use AppBundle\Entity\Ticket;
 use AppBundle\Form\NotaType;
+use AppBundle\Services\Helpers;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,7 +31,7 @@ class NotaRestController extends Controller
         $notas=$this->getDoctrine()
             ->getRepository(Nota::class)
             ->findBy(["ticket"=>$ticket]);
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($notas);
     }
 
@@ -53,7 +54,7 @@ class NotaRestController extends Controller
         $em->flush();
 
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($nota);
     }
 }

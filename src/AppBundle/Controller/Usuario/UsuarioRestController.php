@@ -39,7 +39,7 @@ class UsuarioRestController extends Controller
         //$jsonContent=$this->get('serializer')->serialize($usuarios,'json');
 
         //$jsonContent=json_decode($jsonContent,true);
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($usuarios);
     }
 
@@ -52,7 +52,7 @@ class UsuarioRestController extends Controller
     {
         $usuario=$this->getDoctrine()->getRepository(Usuario::class)
             ->findByRolesUsuario("ROLE_TECNICO");
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($usuario);
     }
     /**
@@ -62,7 +62,7 @@ class UsuarioRestController extends Controller
      */
     public function buscarUsuario(Usuario $usuario)
     {
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return new JsonResponse($helpers->json($usuario));
     }
 
@@ -108,7 +108,7 @@ class UsuarioRestController extends Controller
             }
 
 
-            $helpers =$this->get("app.helpers");
+            $helpers=$this->get(Helpers::class);
             return new JsonResponse($helpers->json($usuario));
         }
         // $form->getErrors();

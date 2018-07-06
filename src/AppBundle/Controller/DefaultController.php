@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Usuario;
 use AppBundle\Form\UsuarioType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,9 +19,14 @@ class DefaultController extends Controller
      */
     public function loginAction(Request $request)
     {       //llamamos el servicios
+
+        if ($this->getUser()!=null){
+            return $this->redirectToRoute("home");
+        }
         $authenticationUtils=$this->get("security.authentication_utils");
         $error=$authenticationUtils->getLastAuthenticationError();
         $lastUsername=$authenticationUtils->getLastUserName();
+
 
         // replace this example code with whatever you need
         return $this->render('@App/Login/index.html.twig', [
@@ -33,13 +40,6 @@ class DefaultController extends Controller
     public function logoutAction(Request $request)
     {
        // return $this->redirectToRoute('login');
-    }
-
-    /**
-     * @Route("/login_check", name="login_check")
-     */
-    public function checkAction(Request $request)
-    {
     }
 
     /**

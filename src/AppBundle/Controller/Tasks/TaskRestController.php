@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Tasks;
 use AppBundle\Entity\Ticket;
 use AppBundle\Entity\Usuario;
 use AppBundle\Form\TicketType;
+use AppBundle\Services\Helpers;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -35,7 +36,8 @@ class TaskRestController extends Controller{
         getRepository(Ticket::class)
             ->findOneByIdJoinedToUsuario($usuario);
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
+
         return $helpers->json2($tickets);
     }
     /**
@@ -49,7 +51,7 @@ class TaskRestController extends Controller{
         getRepository(Ticket::class)
             ->find($ticket);
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($tickets);
     }
     /**
@@ -67,7 +69,7 @@ class TaskRestController extends Controller{
                 "estado"=> "PENDIENTE"
             ]);
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($tickets);
     }
 
@@ -86,7 +88,7 @@ class TaskRestController extends Controller{
                 "estado"=> "EN_PROCESO"
             ]);
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($tickets);
     }
 
@@ -107,12 +109,14 @@ class TaskRestController extends Controller{
             $estado="EN_PROCESO";
         }elseif ($data["estado"]=="EN_PROCESO"){
             $estado="LISTO";
+            $ticket->setFecha(new \DateTime());
         }
+
         $ticket->setEstado($estado);
             $em=$this->getDoctrine()->getManager();
             $em->flush();
 
-        $helpers=$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($ticket);
     }
 
@@ -138,7 +142,7 @@ class TaskRestController extends Controller{
         $em->persist($ticket);
         $em->flush();
 
-        $helpers =$this->get("app.helpers");
+        $helpers=$this->get(Helpers::class);
         return $helpers->json2($ticket);
     }
 
