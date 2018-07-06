@@ -23,7 +23,7 @@
        </div>
        {% endif %}
    </div>
-        <table id="table"  class="table table-striped table-hover table-responsive table-condensed">
+        <table id="table"  class=" table table-striped table-hover table-responsive table-condensed">
             <thead>
             <tr>
                 <th>#</th>
@@ -35,7 +35,7 @@
                     <th>Asignado Por</th>
                 {% endif %}
                 <th>Estado</th>
-                <th class="text-center">Actions</th>
+                <th ><span class="text-left">Actions</span> </th>
             </tr>
             </thead>
             <tbody>
@@ -59,7 +59,7 @@
                                 "            <th>Asignado Por</th>\n"+
                             {% endif %}
                                 "            <th>Estado</th>\n"+
-                                "            <th class=\"text-center\">Actions</th>\n"+
+                                "            <th class=\"text-left\">Actions</th>\n"+
                                 "        </tr>\n"+
                                 "        </thead> ");
                     $.ajax({
@@ -82,8 +82,14 @@
                                                       "<td>"+new Date(index.fechaCreado.timestamp*1000)+"</td>" +
                                                       "<td>"+usuario+"</td>" +
                                                       "<td>"+index.estado+"</td>" +
-                                                      "<td class='text-center'><a href='"+url+"' class='btn btn-success '>Ver</a> </td>" +
+                                                      "<td class='text-left'><a href='"+url+"' class='btn btn-success btn-sm '>Ver</a>" +
+                                                        {% if is_granted("ROLE_TECNICO") %}
+
+                                                      "    " + cambiarEstiloButton(index.estado,index.id)+
+                                                        {% endif %}
+                                                      "</td>" +
                                "</tr>");
+
                           }
                         });
                         console.log(response);
@@ -91,6 +97,36 @@
 
                     });
 
+                }
+                function cambiarEstiloButton(estado,id){
+
+                    var result="";
+                    if (estado=="EN_PROCESO") {
+                       result= "<span name='EN_PROCESO' id='"+id+"' onclick='cambiarEstado("+id+")' class='btn  btn-warning btn-sm '>"+estado+"</span>";
+                    }else if(estado=="PENDIENTE") {
+                        result= "<span name='PENDIENTE' id='"+id+"' onclick='cambiarEstado("+id+")' class='btn btn-primary btn-sm'>INICIAR</span>";
+                    }
+                    return result;
+
+                }
+                function cambiarEstado(id){
+                    var estado =$("#"+id).attr("name");
+                    var data={
+                        estado:estado
+                    };
+                    $.ajax({
+                        url:Routing.generate('rest_update_ticket', {id : id}),
+                        type: 'PUT',
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            console.log(response);
+                        }  ,
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    });
+
+                    getTableTask();
                 }
                 getTableTask();
         </script>
