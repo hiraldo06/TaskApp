@@ -2,20 +2,20 @@
 
 {% block title %}Taks{% endblock %}
 
-{% block nav_tasks %} class="active" {% endblock %}
+{% block nav_en_proceso %} class="active" {% endblock %}
 {% block nav_home %} {% endblock %}
 {% block body %}
 
    <div class="row">
-       <div class="col-md-4">
+       <div class="col-md-8">
            {% if is_granted("ROLE_NORMAL") %}
-            <h1>Mis tickets</h1>
+            <h1>Mis tickets En Proceso</h1>
            {% else %}
             <h1>Mis Asignaciones</h1>
            {% endif %}
        </div>
         {% if is_granted("ROLE_NORMAL") %}
-       <div class="col-md-4 col-md-offset-4">
+       <div class="col-md-4 ">
            <h1 class="text-right">
                <a href="{{ path('crear_task') }}" class="btn btn-primary">Nuevo Ticket</a>
            </h1>
@@ -63,7 +63,7 @@
                                 "        </tr>\n"+
                                 "        </thead> ");
                     $.ajax({
-                    url: Routing.generate('task_list', {id : {{ app.user.id}}}),
+                    url: Routing.generate('rest_en_proceso_task', {id : {{ app.user.id}}}),
                     type: 'GET',
                     success:function (response) {
                         console.log(response);

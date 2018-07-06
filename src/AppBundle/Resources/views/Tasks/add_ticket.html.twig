@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Taks{% endblock %}
+
+{% block nav_tasks %} class="active" {% endblock %}
+{% block nav_home %} {% endblock %}
+{% block body %}
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <di class="row">
+                <div class="col-md-4">
+                    <h3>Nueva Tarea</h3>
+                </div>
+                <div class="col-md-5 col-md-offset-3">
+                    <p></p>
+                    <a href="{{ path('tasks') }}" class="btn btn-danger">Cancelar</a>
+                    <button onclick="guardarTask()" class="btn btn-success">Guardar</button>
+                </div>
+            </di>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Asignado A:</h3>
+                </div>
+                <div class="col-md-8">
+                    <br>
+                    <select class="form-control" id="sel1">
+                        <option value="default">Seleccione un Usuario Tecnico</option>
+                        {% for usuario in usuariosAsignado %}
+
+                            <option value="{{ usuario.id }}">{{ usuario.nombre }}</option>
+
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Descripcion :</h3>
+                </div>
+                <div class="col-md-8">
+                    <br>
+                    <textarea class="form-control" id="descripcion"  rows="5" ></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block js %}
+
+        <script>
+
+                function guardarTask(){
+
+                    var descripcion=$("#descripcion").val();
+                    var usuario={{ app.user.id }};
+                    var usuarioAsignado=$("#sel1").val();
+
+                    if(usuarioAsignado != "default"){
+
+                        var data ={
+                            descripcion : descripcion,
+                            usuario : usuario,
+                            usuarioAsignado: usuarioAsignado
+                        };
+                        $.ajax({
+                            url:Routing.generate('rest_crear_task'),
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            success: function (response) {
+                                console.log(response);
+                            }  ,
+                            error: function (err) {
+                                console.log(err);
+                            }
+                        });
+                    }
+
+
+                }
+
+
+
+        </script>
+    {% endblock %}
+
+{% endblock %}

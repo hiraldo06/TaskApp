@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Usuario;
 
 
+use AppBundle\AppBundle;
 use AppBundle\Entity\Usuario;
 use AppBundle\Form\UsuarioType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -33,13 +34,27 @@ class UsuarioRestController extends Controller
         getRepository(Usuario::class)
             ->findAll();
 
-        $jsonContent=$this->get('serializer')->serialize($usuarios,'json');
+        dump($usuarios);
+        die();
+        //$jsonContent=$this->get('serializer')->serialize($usuarios,'json');
 
-        $jsonContent=json_decode($jsonContent,true);
+        //$jsonContent=json_decode($jsonContent,true);
         $helpers=$this->get("app.helpers");
         return $helpers->json2($usuarios);
     }
 
+    /**
+     * @Route("rest/usuario/roles", options={"expose"=true}, name="rest_rolest_usuario")
+     * @Method("GET")
+     * @return Response
+     */
+    public function buscarByRoleUsuario()
+    {
+        $usuario=$this->getDoctrine()->getRepository(Usuario::class)
+            ->findByRolesUsuario("ROLE_TECNICO");
+        $helpers=$this->get("app.helpers");
+        return $helpers->json2($usuario);
+    }
     /**
      * @Route("rest/usuario/{id}", options={"expose"=true}, name="buscar_usuario")
      * @Method("GET")
@@ -50,6 +65,8 @@ class UsuarioRestController extends Controller
         $helpers=$this->get("app.helpers");
         return new JsonResponse($helpers->json($usuario));
     }
+
+
 
     /**
      * @Route("/rest/usuario", options={"expose"=true}, name="guardar_usuario")

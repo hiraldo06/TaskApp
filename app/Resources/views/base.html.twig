@@ -61,6 +61,12 @@
                 <li {% block nav_users %} {% endblock %} ><a href="{{ path('users') }}">Users</a></li>
                 {% endif %}
                 <li {% block nav_tasks %} {% endblock %}><a href="{{ path('tasks') }}">Tasks</a></li>
+                {% if is_granted('ROLE_NORMAL') %}
+                    <li {% block nav_pendiente %} {% endblock %} ><a href="{{ path('pendiente_tasks') }}">Pendientes</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_NORMAL') %}
+                    <li {% block nav_en_proceso %} {% endblock %}  ><a href="{{ path('en_proceso_tasks') }}" >En Proceso</a></li>
+                {% endif %}
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -104,6 +110,11 @@
 
 <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js">
+</script>
+{% endblock %}
+{% block js %}
 {% endblock %}
 </body>
 </html>

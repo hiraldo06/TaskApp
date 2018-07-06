@@ -2,7 +2,7 @@
 
 {% block title %}Taks{% endblock %}
 
-{% block nav_tasks %} class="active" {% endblock %}
+{% block nav_pendiente %} class="active" {% endblock %}
 {% block nav_home %} {% endblock %}
 {% block body %}
 
@@ -63,7 +63,7 @@
                                 "        </tr>\n"+
                                 "        </thead> ");
                     $.ajax({
-                    url: Routing.generate('task_list', {id : {{ app.user.id}}}),
+                    url: Routing.generate('rest_pendiente_task', {id : {{ app.user.id}}}),
                     type: 'GET',
                     success:function (response) {
                         console.log(response);

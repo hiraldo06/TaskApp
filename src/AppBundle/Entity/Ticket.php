@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Ticket
  *
  * @ORM\Table(name="ticket", indexes={@ORM\Index(name="fk_ticket_usuario", columns={"usuario_id"}), @ORM\Index(name="fk_ticket_usuario_asignado", columns={"usuario_asignado_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TicketRepository")
  */
 class Ticket
 {
