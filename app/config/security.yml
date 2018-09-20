@@ -42,7 +42,7 @@ security:
             - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
             - { path: ^/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY}
             - { path: ^/registro, roles: IS_AUTHENTICATED_ANONYMOUSLY}
-            - { path: ^/rest/usuario, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+            - { path: ^/rest/usuario, roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_TECNICO,ROLE_NORMAL]}
             - { path: ^/rest/nota, roles: [ROLE_TECNICO,ROLE_NORMAL]}
             - { path: ^/task/crear, roles: ROLE_NORMAL}
             - { path: ^/task, roles: [ROLE_TECNICO,ROLE_NORMAL]}
