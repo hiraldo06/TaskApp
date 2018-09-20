@@ -69,7 +69,8 @@
                             type: 'POST',
                             data: JSON.stringify(data),
                             success: function (response) {
-                                window.location.href = "/app_dev.php/task";
+                                location.href=generateUrl();
+                                console.log(generateUrl());
                             }  ,
                             error: function (err) {
                                 console.log(err);
@@ -80,7 +81,13 @@
 
                 }
 
+                function generateUrl() {
 
+                    let url=window.location.href;
+                    url.search('app_dev.php')!= -1? resul= '/app_dev.php/task': resul='/task';
+                    return resul;
+                }
+                generateUrl();
 
         </script>
     {% endblock %}

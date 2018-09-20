@@ -72,9 +72,8 @@
         function generateUrl() {
             console.log(window.location.href);
             let url=window.location.href;
-            url.search('app_dev.php')? resul= '/app_dev.php/login': resul='/login';
+            url.search('app_dev.php')!= -1? resul= '/app_dev.php/login': resul='/login';
             return resul;
         }
-        generateUrl();
     </script>
 {% endblock %}
